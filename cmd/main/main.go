@@ -5,9 +5,9 @@ import (
 	"log"
 	"net"
 	"os"
-	pb "url-shortener/protos"
-	"url-shortener/server"
-	"url-shortener/storage"
+	pb "url-shortener/internal/pkg/proto"
+	"url-shortener/internal/service"
+	"url-shortener/internal/storage"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterURLShortenerServiceServer(grpcServer, &server.Server{
+	pb.RegisterURLShortenerServiceServer(grpcServer, &service.Server{
 		Storage: storage.NewMemoryStorage(),
 	})
 

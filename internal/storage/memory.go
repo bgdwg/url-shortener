@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"sync"
-	"url-shortener/generator"
+	"url-shortener/internal/generator"
 )
 
 type MemoryStorage struct {
