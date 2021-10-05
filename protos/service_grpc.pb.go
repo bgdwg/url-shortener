@@ -14,7 +14,7 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// UrlShortenerClient is the client API for UrlShortener service.
+// UrlShortenerClient is the client API for UrlShortener server.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UrlShortenerClient interface {
@@ -48,7 +48,7 @@ func (c *urlShortenerClient) GetUrl(ctx context.Context, in *Key, opts ...grpc.C
 	return out, nil
 }
 
-// UrlShortenerServer is the server API for UrlShortener service.
+// UrlShortenerServer is the server API for UrlShortener server.
 // All implementations must embed UnimplementedUrlShortenerServer
 // for forward compatibility
 type UrlShortenerServer interface {
@@ -69,7 +69,7 @@ func (UnimplementedUrlShortenerServer) GetUrl(context.Context, *Key) (*Url, erro
 }
 func (UnimplementedUrlShortenerServer) mustEmbedUnimplementedUrlShortenerServer() {}
 
-// UnsafeUrlShortenerServer may be embedded to opt out of forward compatibility for this service.
+// UnsafeUrlShortenerServer may be embedded to opt out of forward compatibility for this server.
 // Use of this interface is not recommended, as added methods to UrlShortenerServer will
 // result in compilation errors.
 type UnsafeUrlShortenerServer interface {
@@ -116,7 +116,7 @@ func _UrlShortener_GetUrl_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-// UrlShortener_ServiceDesc is the grpc.ServiceDesc for UrlShortener service.
+// UrlShortener_ServiceDesc is the grpc.ServiceDesc for UrlShortener server.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UrlShortener_ServiceDesc = grpc.ServiceDesc{
@@ -133,5 +133,5 @@ var UrlShortener_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "protos/service.proto",
+	Metadata: "protos/server.proto",
 }

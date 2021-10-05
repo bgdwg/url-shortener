@@ -1,4 +1,4 @@
-package service
+package server
 
 import (
 	"context"
@@ -15,6 +15,7 @@ var (
 )
 
 type Server struct {
+	pb.UnimplementedUrlShortenerServer
 	Storage storage.Storage
 }
 
@@ -55,3 +56,4 @@ func (s *Server) GetUrl(ctx context.Context, req *pb.Key) (*pb.Url, error) {
 
 	return &pb.Url{ Url: string(url) }, nil
 }
+
