@@ -9,9 +9,8 @@ import (
 	pb "url-shortener/protos"
 )
 
-const (
-	address     = "localhost:8081"
-	defaultName = ""
+var (
+	address = "localhost:8081"
 )
 
 func main() {
@@ -20,26 +19,33 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewUrlShortenerClient(conn)
-
+	c := pb.NewURLShortenerServiceClient(conn)
 	// Contact the server and print out its response.
-	url := defaultName
+	var method, url, key string
 	if len(os.Args) > 1 {
-		url = os.Args[1]
+		method = os.Args[1]
+		if method == "create" {
+			url = os.Args[2]
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+			defer cancel()
+			createURLResp, err := c.CreateURL(ctx, &pb.CreateURLRequest{Url: url})
+			if err != nil {
+				log.Fatalf("could not create URL: %v", err)
+			}
+			log.Printf("Create short URL: %s", createURLResp.GetKey())
+		} else if method == "get" {
+			key = os.Args[2]
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+			defer cancel()
+			createURLResp, err := c.GetURL(ctx, &pb.GetURLRequest{Key: key})
+			if err != nil {
+				log.Fatalf("could not create URL: %v", err)
+			}
+			log.Printf("Create short URL: %s", createURLResp.GetUrl())
+		} else {
+			log.Fatalf("first argument must be 'create' or 'get': %v", err)
+		}
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	resp1, err := c.CreateUrl(ctx, &pb.Url{Url: url})
-	if err != nil {
-		log.Fatalf("could not create url: %v", err)
-	}
-	log.Printf("Key: %s", resp1.GetKey())
-
-	resp2, err := c.GetUrl(ctx, &pb.Key{Key: resp1.GetKey()})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("Greeting: %s", resp2.GetUrl())
 }
 
 

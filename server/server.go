@@ -3,57 +3,59 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
+	"net/url"
 	"os"
+	"regexp"
 	pb "url-shortener/protos"
 	"url-shortener/storage"
 )
 
 var (
-	InfoLogger  = log.New(os.Stderr, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+	InfoLogger  = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	ErrorLogger = log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	validKey = regexp.MustCompile("^[a-zA-Z0-9_]*$")
 )
 
 type Server struct {
-	pb.UnimplementedUrlShortenerServer
+	pb.UnimplementedURLShortenerServiceServer
 	Storage storage.Storage
 }
 
-func (s *Server) CreateUrl(ctx context.Context, req *pb.Url) (*pb.Key, error) {
-	url := req.GetUrl()
-	if url == "" {
-		err := errors.New("no url in request")
-		ErrorLogger.Println("CreateUrl: %s", err.Error())
-		return &pb.Key{}, err
+func (s *Server) CreateURL(ctx context.Context, req *pb.CreateURLRequest) (*pb.CreateURLResponse, error) {
+	resp := &pb.CreateURLResponse{}
+	longURL := req.GetUrl()
+	if _, err := url.ParseRequestURI(longURL); err != nil {
+		ErrorLogger.Printf("CreateURL: invalid url requested: %v", err)
+		return resp, err
 	}
-
-	InfoLogger.Println("CreateUrl: %s", url)
-
-	key, err := s.Storage.PutUrl(ctx, storage.Url(url))
+	InfoLogger.Printf("CreateURL: create short URL from: %s", longURL)
+	key, err := s.Storage.PutURL(ctx, storage.URL(longURL))
 	if err != nil {
-		ErrorLogger.Println("Storage.PutUrl: %s", err.Error())
-		return &pb.Key{}, err
+		ErrorLogger.Printf("CreateURL: %v", err)
+		return resp, err
 	}
-
-	return &pb.Key{ Key: string(key) }, nil
+	resp.Key = string(key)
+	return resp, nil
 }
 
-func (s *Server) GetUrl(ctx context.Context, req *pb.Key) (*pb.Url, error) {
+func (s *Server) GetURL(ctx context.Context, req *pb.GetURLRequest) (*pb.GetURLResponse, error) {
+	resp := &pb.GetURLResponse{}
 	key := req.GetKey()
-	if key == "" {
-		err := errors.New("no key in request")
-		ErrorLogger.Println("GetUrl: %s", err.Error())
-		return &pb.Url{}, err
+	fmt.Println(key)
+	if !validKey.MatchString(key) {
+		err := errors.New("invalid key requested")
+		ErrorLogger.Printf("GetURL: %v", err)
+		return resp, err
 	}
-
-	InfoLogger.Println("GetUrl: %s", key)
-
-	url, err := s.Storage.GetUrl(ctx, storage.Key(key))
+	InfoLogger.Printf("GetURL: lookup for URL with key: %s", key)
+	longURL, err := s.Storage.GetURL(ctx, storage.Key(key))
 	if err != nil {
-		ErrorLogger.Println("Storage.GetUrl: %s", err.Error())
-		return &pb.Url{}, err
+		ErrorLogger.Printf("GetURL: %v", err)
+		return resp, err
 	}
-
-	return &pb.Url{ Url: string(url) }, nil
+	resp.Url = string(longURL)
+	return resp, nil
 }
 

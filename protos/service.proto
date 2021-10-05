@@ -2,15 +2,23 @@ syntax = "proto3";
 
 option go_package = "url-shortener/protos";
 
-service UrlShortener {
-    rpc CreateUrl(Url) returns (Key);
-    rpc GetUrl(Key) returns (Url);
+service URLShortenerService {
+    rpc CreateURL(CreateURLRequest) returns (CreateURLResponse);
+    rpc GetURL(GetURLRequest) returns (GetURLResponse);
 }
 
-message Url {
+message CreateURLRequest {
     string Url = 1;
 }
 
-message Key {
+message CreateURLResponse {
     string Key = 1;
+}
+
+message GetURLRequest {
+    string Key = 1;
+}
+
+message GetURLResponse {
+    string Url = 1;
 }

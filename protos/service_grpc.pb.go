@@ -14,124 +14,124 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// UrlShortenerClient is the client API for UrlShortener server.
+// URLShortenerServiceClient is the client API for URLShortenerService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UrlShortenerClient interface {
-	CreateUrl(ctx context.Context, in *Url, opts ...grpc.CallOption) (*Key, error)
-	GetUrl(ctx context.Context, in *Key, opts ...grpc.CallOption) (*Url, error)
+type URLShortenerServiceClient interface {
+	CreateURL(ctx context.Context, in *CreateURLRequest, opts ...grpc.CallOption) (*CreateURLResponse, error)
+	GetURL(ctx context.Context, in *GetURLRequest, opts ...grpc.CallOption) (*GetURLResponse, error)
 }
 
-type urlShortenerClient struct {
+type uRLShortenerServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUrlShortenerClient(cc grpc.ClientConnInterface) UrlShortenerClient {
-	return &urlShortenerClient{cc}
+func NewURLShortenerServiceClient(cc grpc.ClientConnInterface) URLShortenerServiceClient {
+	return &uRLShortenerServiceClient{cc}
 }
 
-func (c *urlShortenerClient) CreateUrl(ctx context.Context, in *Url, opts ...grpc.CallOption) (*Key, error) {
-	out := new(Key)
-	err := c.cc.Invoke(ctx, "/UrlShortener/CreateUrl", in, out, opts...)
+func (c *uRLShortenerServiceClient) CreateURL(ctx context.Context, in *CreateURLRequest, opts ...grpc.CallOption) (*CreateURLResponse, error) {
+	out := new(CreateURLResponse)
+	err := c.cc.Invoke(ctx, "/URLShortenerService/CreateURL", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *urlShortenerClient) GetUrl(ctx context.Context, in *Key, opts ...grpc.CallOption) (*Url, error) {
-	out := new(Url)
-	err := c.cc.Invoke(ctx, "/UrlShortener/GetUrl", in, out, opts...)
+func (c *uRLShortenerServiceClient) GetURL(ctx context.Context, in *GetURLRequest, opts ...grpc.CallOption) (*GetURLResponse, error) {
+	out := new(GetURLResponse)
+	err := c.cc.Invoke(ctx, "/URLShortenerService/GetURL", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UrlShortenerServer is the server API for UrlShortener server.
-// All implementations must embed UnimplementedUrlShortenerServer
+// URLShortenerServiceServer is the server API for URLShortenerService service.
+// All implementations must embed UnimplementedURLShortenerServiceServer
 // for forward compatibility
-type UrlShortenerServer interface {
-	CreateUrl(context.Context, *Url) (*Key, error)
-	GetUrl(context.Context, *Key) (*Url, error)
-	mustEmbedUnimplementedUrlShortenerServer()
+type URLShortenerServiceServer interface {
+	CreateURL(context.Context, *CreateURLRequest) (*CreateURLResponse, error)
+	GetURL(context.Context, *GetURLRequest) (*GetURLResponse, error)
+	mustEmbedUnimplementedURLShortenerServiceServer()
 }
 
-// UnimplementedUrlShortenerServer must be embedded to have forward compatible implementations.
-type UnimplementedUrlShortenerServer struct {
+// UnimplementedURLShortenerServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedURLShortenerServiceServer struct {
 }
 
-func (UnimplementedUrlShortenerServer) CreateUrl(context.Context, *Url) (*Key, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateUrl not implemented")
+func (UnimplementedURLShortenerServiceServer) CreateURL(context.Context, *CreateURLRequest) (*CreateURLResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateURL not implemented")
 }
-func (UnimplementedUrlShortenerServer) GetUrl(context.Context, *Key) (*Url, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUrl not implemented")
+func (UnimplementedURLShortenerServiceServer) GetURL(context.Context, *GetURLRequest) (*GetURLResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetURL not implemented")
 }
-func (UnimplementedUrlShortenerServer) mustEmbedUnimplementedUrlShortenerServer() {}
+func (UnimplementedURLShortenerServiceServer) mustEmbedUnimplementedURLShortenerServiceServer() {}
 
-// UnsafeUrlShortenerServer may be embedded to opt out of forward compatibility for this server.
-// Use of this interface is not recommended, as added methods to UrlShortenerServer will
+// UnsafeURLShortenerServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to URLShortenerServiceServer will
 // result in compilation errors.
-type UnsafeUrlShortenerServer interface {
-	mustEmbedUnimplementedUrlShortenerServer()
+type UnsafeURLShortenerServiceServer interface {
+	mustEmbedUnimplementedURLShortenerServiceServer()
 }
 
-func RegisterUrlShortenerServer(s grpc.ServiceRegistrar, srv UrlShortenerServer) {
-	s.RegisterService(&UrlShortener_ServiceDesc, srv)
+func RegisterURLShortenerServiceServer(s grpc.ServiceRegistrar, srv URLShortenerServiceServer) {
+	s.RegisterService(&URLShortenerService_ServiceDesc, srv)
 }
 
-func _UrlShortener_CreateUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Url)
+func _URLShortenerService_CreateURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateURLRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UrlShortenerServer).CreateUrl(ctx, in)
+		return srv.(URLShortenerServiceServer).CreateURL(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/UrlShortener/CreateUrl",
+		FullMethod: "/URLShortenerService/CreateURL",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UrlShortenerServer).CreateUrl(ctx, req.(*Url))
+		return srv.(URLShortenerServiceServer).CreateURL(ctx, req.(*CreateURLRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UrlShortener_GetUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Key)
+func _URLShortenerService_GetURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetURLRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UrlShortenerServer).GetUrl(ctx, in)
+		return srv.(URLShortenerServiceServer).GetURL(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/UrlShortener/GetUrl",
+		FullMethod: "/URLShortenerService/GetURL",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UrlShortenerServer).GetUrl(ctx, req.(*Key))
+		return srv.(URLShortenerServiceServer).GetURL(ctx, req.(*GetURLRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UrlShortener_ServiceDesc is the grpc.ServiceDesc for UrlShortener server.
+// URLShortenerService_ServiceDesc is the grpc.ServiceDesc for URLShortenerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UrlShortener_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "UrlShortener",
-	HandlerType: (*UrlShortenerServer)(nil),
+var URLShortenerService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "URLShortenerService",
+	HandlerType: (*URLShortenerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateUrl",
-			Handler:    _UrlShortener_CreateUrl_Handler,
+			MethodName: "CreateURL",
+			Handler:    _URLShortenerService_CreateURL_Handler,
 		},
 		{
-			MethodName: "GetUrl",
-			Handler:    _UrlShortener_GetUrl_Handler,
+			MethodName: "GetURL",
+			Handler:    _URLShortenerService_GetURL_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "protos/server.proto",
+	Metadata: "service.proto",
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/grpclog"
 	"log"
 	"net"
 	"os"
@@ -23,13 +22,13 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterUrlShortenerServer(grpcServer, &server.Server{
+	pb.RegisterURLShortenerServiceServer(grpcServer, &server.Server{
 		Storage: storage.NewMemoryStorage(),
 	})
 
 	log.Printf("start serving on %s", grpcPort)
 
 	if err = grpcServer.Serve(listener); err != nil {
-		grpclog.Fatalf("failed to serve %v", err)
+		log.Fatalf("failed to serve: %v", err)
 	}
 }

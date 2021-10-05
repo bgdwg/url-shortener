@@ -14,10 +14,10 @@ var (
 
 type (
 	Key string
-	Url string
+	URL string
 )
 
 type Storage interface {
-	PutUrl(ctx context.Context, url Url) (Key, error)
-	GetUrl(ctx context.Context, key Key) (Url, error)
+	PutURL(ctx context.Context, url URL) (Key, error)
+	GetURL(ctx context.Context, key Key) (URL, error)
 }
