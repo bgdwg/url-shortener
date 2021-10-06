@@ -1,9 +1,8 @@
-package service
+package shortener
 
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"net/url"
 	"os"
@@ -40,8 +39,7 @@ func (s *Server) CreateURL(ctx context.Context, req *proto.CreateURLRequest) (*p
 
 func (s *Server) GetURL(ctx context.Context, req *proto.GetURLRequest) (*proto.GetURLResponse, error) {
 	key := req.GetKey()
-	fmt.Println(key)
-	if !validKey.MatchString(key) {
+	if !validKey.MatchString(key) || len(key) != 10 {
 		err := errors.New("invalid key requested")
 		ErrorLogger.Printf("GetURL: %v", err)
 		return nil, err
