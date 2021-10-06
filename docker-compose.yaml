@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  app:
+    container_name: url-shortener-service
+    image: url-shortener
+    build: .
+    ports:
+      - "5300:5300"
+    depends_on:
+      - postgres
+    environment:
+      - GRPC_PORT=:5300
+      - POSTGRES_ADDR=postgres:5432
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DATABASE=test
+    restart: on-failure
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=test
+    ports:
+      - "5432:5432"

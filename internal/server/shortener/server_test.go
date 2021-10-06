@@ -18,16 +18,15 @@ import (
 )
 
 var (
-	dbName      = os.Getenv("POSTGRES_DATABASE_NAME")
-	userName    = os.Getenv("POSTGRES_USER_NAME")
+	dbName      = os.Getenv("POSTGRES_DATABASE")
+	userName    = os.Getenv("POSTGRES_USER")
 	password    = os.Getenv("POSTGRES_PASSWORD")
-	pgPort      = os.Getenv("POSTGRES_PORT")
-	pgHost      = os.Getenv("POSTGRES_HOST")
-	s = postgresql.NewStorage(fmt.Sprintf("postgres://%s:%s@%s%s/%s",
-		userName, password, pgHost, pgPort, dbName))
+	pgAddr      = os.Getenv("POSTGRES_ADDR")
+	s = postgresql.NewStorage(fmt.Sprintf("postgres://%s:%s@%s/%s",
+		userName, password, pgAddr, dbName))
 )
 
-// influenced by: https://stackoverflow.com/questions/42102496/testing-a-grpc-service
+// copy: https://stackoverflow.com/questions/42102496/testing-a-grpc-service
 
 func dialer() func(context.Context, string) (net.Conn, error) {
 	listener := bufconn.Listen(1024 * 1024)

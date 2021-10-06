@@ -13,12 +13,11 @@ import (
 
 var (
 	grpcPort    = os.Getenv("GRPC_PORT")
-	dbName      = os.Getenv("POSTGRES_DATABASE_NAME")
-	userName    = os.Getenv("POSTGRES_USER_NAME")
+	dbName      = os.Getenv("POSTGRES_DATABASE")
+	userName    = os.Getenv("POSTGRES_USER")
 	password    = os.Getenv("POSTGRES_PASSWORD")
-	pgPort      = os.Getenv("POSTGRES_PORT")
-	pgHost      = os.Getenv("POSTGRES_HOST")
-	dbURL = fmt.Sprintf("postgres://%s:%s@%s%s/%s", userName, password, pgHost, pgPort, dbName)
+	pgAddr      = os.Getenv("POSTGRES_ADDR")
+	dbURL = fmt.Sprintf("postgres://%s:%s@%s/%s", userName, password, pgAddr, dbName)
 )
 
 func main() {

@@ -9,13 +9,11 @@ import (
 )
 
 var (
-	dbName      = os.Getenv("POSTGRES_DATABASE_NAME")
-	userName    = os.Getenv("POSTGRES_USER_NAME")
+	dbName      = os.Getenv("POSTGRES_DATABASE")
+	userName    = os.Getenv("POSTGRES_USER")
 	password    = os.Getenv("POSTGRES_PASSWORD")
-	pgPort      = os.Getenv("POSTGRES_PORT")
-	pgHost      = os.Getenv("POSTGRES_HOST")
-	s = NewStorage(fmt.Sprintf("postgres://%s:%s@%s%s/%s",
-		userName, password, pgHost, pgPort, dbName))
+	pgAddr      = os.Getenv("POSTGRES_ADDR")
+	s = NewStorage(fmt.Sprintf("postgres://%s:%s@%s/%s", userName, password, pgAddr, dbName))
 )
 
 func TestStorage(t *testing.T) {
